@@ -1,5 +1,7 @@
 import pandas as pd
 
+#The standard Perceptron algorithm
+
 def weightVectors(train, r, T):
     #initialize w_0
     weights = [0, 0, 0, 0]

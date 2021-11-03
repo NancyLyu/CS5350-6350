@@ -1,10 +1,11 @@
 import pandas as pd
 
-#The voted Perceptron algorithm
+#The average Perceptron algorithm
 
 def weightVectors(train, r, T):
     #initialize w_0
     weights = [0, 0, 0, 0]
+    a = [0, 0, 0, 0]
     distinctWeights = []
     c = [0]
     m = 0
@@ -22,7 +23,9 @@ def weightVectors(train, r, T):
                 c.append(1)
             else:
                 c[m] += 1
-    return distinctWeights, c
+            for k in range(len(i) - 1):
+                a[k] += weights[k]
+    return a, distinctWeights, c
 
 #for each training example (x_i, y_i), predict y'
 def predict(row, weights):
@@ -31,26 +34,21 @@ def predict(row, weights):
         sign += row[i]*weights[i]
     return 1 if sign >= 0 else 0
 
-def votePrediction(row, distinctWeights, c):
+def averagePrediction(row, distinctWeights, c):
     sign = 0
-    sign_inner = 0
     counter = 0
+    sign_inner = 0
     for i in distinctWeights:
         for j in range(len(row) - 1):
             sign_inner += row[j]*i[j]
-        if sign_inner >= 0:
-            sign_inner = 1
-        else:
-            sign_inner = -1
         sign += sign_inner*c[counter]
         counter += 1
     return 1 if sign >= 0 else 0
-        
 
-def votePerceptron(distinctWeights, counts, test):
+def averagePerceptron(distinctWeights, counts, test):
     predictions = []
     for i in test:
-        predictions.append(votePrediction(i, distinctWeights, counts))
+        predictions.append(averagePrediction(i, distinctWeights, counts))
     return predictions
 
 def predictionError(y_true, y_pred):
@@ -89,10 +87,9 @@ train[0][4] = int(train[0][4])
 test[0][4] = int(test[0][4])
 
 #get the learned weight vector and average prediction error on test dataset
-weights, count = weightVectors(train, 0.1, 10)
-count = count[1:]
-y_pred = votePerceptron(weights, count, test)
+a, distinctWeights, c = weightVectors(train, 0.1, 10)
+c = c[1:]
+y_pred = averagePerceptron(distinctWeights, c, test)
 error  = predictionError(test_label, y_pred)
-print('Distinct weight vectors: %s' % weights)
-print("Number of correctly predicted training examples of each distinct weight vectors: %s" % count)
+print('Learned weight vector: %s' % a)
 print('Prediction error: %.3f%%' % error)

@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import SGD_NeuralNetwork as NN
+import NeuralNetwork as NN
 
 train = pd.read_csv("/Users/weiranlyu/Desktop/2021 Fall/CS6350/Neural Networks/bank-note/train.csv")
 test = pd.read_csv("/Users/weiranlyu/Desktop/2021 Fall/CS6350/Neural Networks/bank-note/test.csv")
